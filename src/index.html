@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BlockMed</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css" media="screen">
+      .tree ul {
+        padding-top: 20px; position: relative;
+    
+        -webkit-transition: all 0.5s;
+        -moz-transition: all 0.5s;
+        transition: all 0.5s;
+      }
+  
+      .tree li {
+        float: left; text-align: center;
+        list-style-type: none;
+        position: relative;
+        padding: 20px 5px 0 5px;
+    
+        -webkit-transition: all 0.5s;
+        -moz-transition: all 0.5s;
+        transition: all 0.5s;
+      }
+  
+      /*We will use ::before and ::after to draw the connectors*/
+  
+      .tree li::before, .tree li::after{
+        content: '';
+        position: absolute; top: 0; right: 50%;
+        border-top: 1px solid #ccc;
+        width: 50%; height: 45px;
+        z-index: -1;
+      }
+      .tree li::after{
+        right: auto; left: 50%;
+        border-left: 1px solid #ccc;
+      }
+  
+      /*We need to remove left-right connectors from elements without 
+      any siblings*/
+      .tree li:only-child::after, .tree li:only-child::before {
+        display: none;
+      }
+  
+      /*Remove space from the top of single children*/
+      .tree li:only-child{ padding-top: 0;}
+  
+      /*Remove left connector from first child and 
+      right connector from last child*/
+      .tree li:first-child::before, .tree li:last-child::after{
+        border: 0 none;
+      }
+      /*Adding back the vertical connector to the last nodes*/
+      .tree li:last-child::before{
+        border-right: 1px solid #ccc;
+        border-radius: 0 5px 0 0;
+        
+        -webkit-transform: translateX(1px);
+        -moz-transform: translateX(1px);
+        transform: translateX(1px);
+        
+        -webkit-border-radius: 0 5px 0 0;
+        -moz-border-radius: 0 5px 0 0;
+        border-radius: 0 5px 0 0;
+      }
+      .tree li:first-child::after{
+        border-radius: 5px 0 0 0;
+        -webkit-border-radius: 5px 0 0 0;
+        -moz-border-radius: 5px 0 0 0;
+      }
+  
+      /*Time to add downward connectors from parents*/
+      .tree ul ul::before{
+        content: '';
+        position: absolute; top: -12px; left: 50%;
+        border-left: 1px solid #ccc;
+        width: 0; height: 32px;
+        z-index: -1;
+      }
+  
+      .tree li a{
+        border: 1px solid #ccc;
+        padding: 5px 10px;
+        text-decoration: none;
+        color: #666;
+        font-family: arial, verdana, tahoma;
+        font-size: 11px;
+        display: inline-block;
+        background: white;
+    
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+    
+        -webkit-transition: all 0.5s;
+        -moz-transition: all 0.5s;
+        transition: all 0.5s;
+      }
+      .tree li a+a {
+        margin-left: 20px;
+        position: relative;
+      }
+      .tree li a+a::before {
+        content: '';
+        position: absolute;
+        border-top: 1px solid #ccc;
+        top: 50%; left: -21px; 
+        width: 20px;
+      }
+  
+      /*Time for some hover effects*/
+      /*We will apply the hover effect the the lineage of the element also*/
+      .tree li a:hover, .tree li a:hover~ul li a {
+        background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
+      }
+      /*Connector styles on hover*/
+      .tree li a:hover~ul li::after, 
+      .tree li a:hover~ul li::before, 
+      .tree li a:hover~ul::before, 
+      .tree li a:hover~ul ul::before
+      {
+        border-color: #94a0b4;
+      }
+    </style>
+    <script>
+      function makedisappear(){
+        const e2 = document.getElementById("disp");
+        console.log("enter make dis");
+        e2.style.visibility="hidden";
+
+      const e3 = document.getElementById("1");
+      e3.style.visibility="visible";
+
+      const e4 = document.getElementById("2");
+      e4.style.visibility="visible";
+
+      }
+      function toggle(i){
+      if (i == 1){
+      const e2 = document.getElementById("breast_cancer_chart");
+      e2.style.visibility="hidden";
+      const e1 = document.getElementById("thalessimia_chart");
+      e1.style.visibility="visible";
+      }
+      else{
+      const e2 = document.getElementById("thalessimia_chart");
+      e2.style.visibility="hidden";
+      const e1 = document.getElementById("breast_cancer_chart");
+      e1.style.visibility="visible";}		
+      
+      }
+      
+    
+  </script>
+  </head>
+  <body>
+     <!-- Navigation -->
+     <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+        <div class="container">
+          <a class="navbar-brand" href="#">BlockMed</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">My Profile
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#FamilyHistory">Family Medical History</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#checkup">Checkup History</a>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </nav>
+  
+      <div class="container">
+          <div class="row">
+            <div class="col-lg-12 text-center">
+              <h1 class="mt-5"> My Medical Records</h1>
+                <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>My Vaccines</h4>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form>
+                                  <div class="form-group row">
+                                    <label for="username" class="col-4 col-form-label">Vaccine Name</label> 
+                                    <div class="col-8">
+                                      <input id="fname" placeholder="Vaccine Name" class="form-control here" required="required" type="text">
+                                    </div>
+                                     </div>
+                                   <div class="form-group row">
+                                    <label for="d" class="col-4 col-form-label">Vaccine Date</label> 
+                                    <div class="col-8">
+                                      <input id="emailId"  placeholder="DD/MM/YY" class="form-control here" type="text">
+                                    </div>
+                                  </div>
+                                    <div class="form-group row">
+                                    <div class="offset-2 col-8">
+                                      <button class="btn btn-primary btn-Submit" type="button">Add Vaccine</button>
+                                      <div>
+            <ul class="w3-ul w3-card-4 "  style="width:100%; margin-top:20px" id="faves">
+                <li>25/5/18: MMR </li>
+                <li>16/1/18: ChickenPox</li>
+                <li>24/8/17: Small Pox</li>
+            </ul>
+            </div>
+                                    </div>
+                                  </div>
+                  
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12 text-center">
+              <h1 class="mt-5"></h1>
+                <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>My Allergies</h4>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form>
+                                  <div class="form-group row">
+                                    <label for="username" class="col-4 col-form-label">Allergy Name</label> 
+                                    <div class="col-8">
+                                      <input id="allergy_name" name="username" placeholder="Allergy Name" class="form-control here" required="required" type="text">
+                                    </div>
+                                     </div>
+                                   <div class="form-group row">
+                                    <label for="name" class="col-4 col-form-label">Allergy Description</label> 
+                                    <div class="col-8">
+                                      <input id="allergy_desc" name="name" placeholder="Allergy Description" class="form-control here" type="text">
+                                    </div>
+                                  </div>
+                                    <div class="form-group row">
+                                    <div class="offset-2 col-8">
+                                      <button name="submit" type="submit" class="btn btn-primary  btnAdd" >Add Allergy</button>
+                                      <div>
+            <ul class="w3-ul w3-card-4 "  style="width:100%; margin-top:20px" id="allergy">
+                <li>Peanuts</li>
+                <li>Milk</li>
+            </ul>
+                                    </div>
+                                  </div>
+                  
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+              
+            </div>
+          </div>
+        </div> 
+        <a id="FamilyHistory"> </a>
+        <div class="container">
+           <div class="row">
+             <div class="col-lg-12 text-center">
+               <h3 style="margin-top: 40px"> My Family Medical History </h3>
+         </h3>
+             </div>
+           </div>
+           <div class="container">
+         <div class="row">
+           <div class="col-lg-12 text-center">
+             <h1 class="mt-5"></h1>
+               <div class="col-md-12">
+           <div class="card">
+               <div class="card-body">
+                   <div class="row">
+                       <div class="col-md-12">
+                           <h4>Immediate Family</h4>
+                           <hr>
+                       </div>
+                   </div>
+                   <div class="row">
+                       <div class="col-md-12">
+                           <form>
+                                 <div class="form-group row">
+                                   <label for="username" class="col-4 col-form-label">My Conditions</label> 
+                                   <div class="col-8">
+                                     <input id="username" name="username" placeholder="My Conditions" class="form-control here" required="required" type="text">
+                                   </div>
+                                    </div>
+                                    
+                                  <div class="form-group row">
+                                   <label for="name" class="col-4 col-form-label">Mother's Conditions</label> 
+                                   <div class="col-8">
+                                     <input id="name" name="name" placeholder="Mother's Conditions" class="form-control here" type="text">
+                                   </div>
+                                 </div>
+                                 <div class="form-group row">
+                                    <label for="name" class="col-4 col-form-label">Father's Conditions</label> 
+                                    <div class="col-8">
+                                      <input id="name" name="name" placeholder="Father's Conditions" class="form-control here" type="text">
+                                    </div>
+                                  </div>
+                                  <div class="form-group row">
+                                      <label for="name" class="col-4 col-form-label">Sister's Conditions</label> 
+                                      <div class="col-8">
+                                        <input id="name" name="name" placeholder="Sister's Conditions" class="form-control here" type="text">
+                                      </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="name" class="col-4 col-form-label">Mother's Father Conditions</label> 
+                                        <div class="col-8">
+                                          <input id="name" name="name" placeholder="Mother's Father Conditions" class="form-control here" type="text">
+                                        </div>
+                                      </div>
+                                      <div class="form-group row">
+                                          <label for="name" class="col-4 col-form-label">Mother's Mother Conditions</label> 
+                                          <div class="col-8">
+                                            <input id="name" name="name" placeholder="Mother's Mother Conditions" class="form-control here" type="text">
+                                          </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="name" class="col-4 col-form-label">Mother's Sister Conditions</label> 
+                                            <div class="col-8">
+                                              <input id="name" name="name" placeholder="Mother's Sister Conditions" class="form-control here" type="text">
+                                            </div>
+                                          </div>
+                                   <div class="form-group row">
+                                   <div class="offset-2 col-8">
+                                     <button onClick="makedisappear()" name="submit" id="disp" type="submit" class="btn btn-primary">Generate tree</button>
+                                     
+                                    </div>
+                                    <div class="offset-2 col-8">
+                                      <button class="btn-primary"style="visibility: hidden" id="1"  onclick = "toggle(1)">Thalessimia</button>
+                                     <button style="visibility: hidden" class="btn-default" onclick = "toggle(2)" id="2">Breast Cancer</button>
+                                    </div>
+                                 </div>
+                 
+                                
+                               </form>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                     
+             
+           </div>
+         </div>
+       </div> 
+
+       <div class="tree" style="visibility: hidden" id="thalessimia_chart">
+         
+          <ul>
+            <li>
+              
+              <ul>
+      
+                <li>
+                  <a href="#">Mother's Mother</a><a href="#" style="background-color:red">Mother's Father</a>
+                  <ul>
+                    <li>
+                    <a href="#">Mother's Sister</a></li>
+                    <li>
+                      <a href="#">Mother</a><a href="#">Father</a>
+                      <ul>
+                        <li>
+                          <a href="#" style="background-color:salmon">Me</a>
+                          <p> RISK </p>
+                        </span>
+                        </li>
+                        <li>
+                          <a href="#">Sister</a>
+                        </li>
+                      
+                      </ul>
+                    </li>
+                    
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+          <div class="tree" style="visibility: hidden" id = "breast_cancer_chart">
+          <ul>
+            <li>
+              
+              <ul>
+      
+                <li>
+                  <a href="#">Mother's Mother</a><a href="#">Mother's Father</a>
+                  <ul>
+                    <li><a href="#" style="background-color:red">Mother's Sister</a></li>
+                    <li>
+                      <a href="#">Mother</a><a href="#">Father</a>
+                      <ul>
+                        <li>
+                          <a href="#" style="background-color:salmon">Me</a>
+                          <p> RISK </p>
+                        </li>
+                        <li>
+                          <a href="#">Sister</a>
+                        </li>
+                      
+                      </ul>
+                    </li>
+                    
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+       
+	
+    
+  
+       <!--
+      <div class="panel-pet">
+
+      <form action="/action_page.php">
+        First name:<br>
+        <input type="text" id="fname" name="firstname" >
+        <br>
+        Last name:<br>
+        <input type="text" id="emailId" name="lastname">
+        <br><br>
+        <input type="button" value="Submit" class="btn btn-default btn-Submit">
+        <button class="btn btn-default btn-Submit" type="button">Submit</button>
+
+      </form> 
+      </div>
+
+
+      <div class="panel-pet2">
+
+        <form action="/action_page.php">
+          Vaccine Name<br>
+          <input type="text" id="fname" name="vacname" >
+          <br>
+          ID<br>
+          <input type="text" id="emailId" name="vacid">
+          <br><br>
+          <button class="btn btn-default btn-vacadd" type="button">Add Vaccine</button>
+  
+        </form> 
+        </div>
+        
+      <div id="petsRow" class="row">
+      
+      </div>
+    </div>
+    -->
+<!--
+    <div id="petTemplate" style="display: none;">
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="panel panel-default panel-pet">
+          <div class="panel-heading">
+            <h3 class="panel-title">Scrappy</h3>
+          </div>
+          <div class="panel-body">
+            <img alt="140x140" data-src="holder.js/140x140" class="img-rounded img-center" style="width: 100%;" src="https://animalso.com/wp-content/uploads/2017/01/Golden-Retriever_6.jpg" data-holder-rendered="true">
+            <br/><br/>
+            <strong>Breed</strong>: <span class="pet-breed">Golden Retriever</span><br/>
+            <strong>Age</strong>: <span class="pet-age">3</span><br/>
+            <strong>Location</strong>: <span class="pet-location">Warren, MI</span><br/><br/>
+            <button class="btn btn-default btn-adopt" type="button" data-id="0">Adopt</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>
